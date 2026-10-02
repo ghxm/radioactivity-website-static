@@ -1,8 +1,8 @@
 # radioactivity.directory
 
-Static build of the radio directory. Stations are Markdown files with YAML
-frontmatter, a Python script renders them with Jinja2 into `_site/`, and GitHub
-Actions deploys that folder to GitHub Pages on every push to `main`.
+Static build of [radioactivity.directory](https://github.com/ghxm/radioactivity-website). Stations can be supplied as Markdown files with YAML
+frontmatter, site is rendered by a Python script with Jinja2 into `_site/`, deployed via GitHub
+Actions to GitHub Pages.
 
 ## Adding a station
 
