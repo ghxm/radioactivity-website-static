@@ -1,0 +1,9 @@
+_site/
+.venv/
+venv/
+.idea/
+__pycache__/
+*.pyc
+.DS_Store
+tasks/
+CLAUDE.md

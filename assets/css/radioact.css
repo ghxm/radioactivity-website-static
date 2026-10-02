@@ -1,0 +1,183 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css");
+
+
+/* COLORS */
+
+:root {
+    --lightblue: #c9e4fa; 
+    --lightblue2: #aad9f7;
+    --lightblue3: #abc2f3;
+}
+
+/* */
+
+
+.bg-lightblue{
+    background-color: var(--lightblue) !important;
+}
+
+
+.bg-lightblue2{
+    background-color: var(--lightblue2) !important;
+}
+
+.bg-lightblue3{
+    background-color: var(--lightblue3) !important;
+}
+
+.bg-offwhite{
+    background-color: #fefdfb !important;
+}
+
+.bg-offwhite2{
+    background-color: #e5e5e5 !important;
+}
+
+.border-black {
+    border-color: black!important;
+}
+
+.fw-900 {
+    font-weight: 900;
+}
+
+.station-card {
+    border:1px solid black;
+    scroll-margin-top: 12.5rem;
+}
+
+.station-row {
+    scroll-margin-top: 12rem;
+}
+
+.station-table {
+    border-color: black;
+}
+
+#chat-card {
+    min-height: 28rem;
+}
+
+.card-img-top {
+    border-bottom: 1px solid black;
+    height: calc(14vh + 0.4vw);
+    object-fit: cover;
+}
+
+#tagline {
+    margin-top: 0.2rem;
+    margin-bottom:0.8rem;
+}
+
+/*
+#tagmenu {
+    font-size: calc((0.8em + 0.4vw)) !important;
+}
+*/
+
+#audio-player {
+/*    min-width: 70% !important;*/
+    max-width: 100% !important;
+    height: 2.8em;
+}
+
+#player-station {
+    text-decoration: underline dashed;
+}
+
+.rec-badge {
+    font-size: 0.6em !important;
+    margin-top: -0.5em !important;
+}
+
+.dot-air {
+    height: 0.6rem;
+    width: 0.6rem;
+    border-radius: 50%;
+    display: inline-none;
+  }
+
+.online {
+    background-color: limegreen;
+    margin-right: 0.5rem;
+    display: inline-block;
+
+
+}
+
+.offline {
+    background-color: lightgrey;
+    margin-right: 0.5rem;
+    display: inline-block;
+}
+
+.audio-ch3 {
+    width: 100%;
+}
+
+#input-link[type='text'] {
+    height: 1.7rem !important;
+    font-size: 0.8rem;
+    font-family: monospace;
+}
+
+
+.btn-remove {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
+}
+
+
+optgroup {
+    font-size: .875rem !important;
+}
+
+/* add playing icon to selected option */
+
+
+.animate-blue-pulse-quick {
+    animation: blue-pulse 1s 2;
+
+}
+
+.animate-blue-pulse {
+    animation: blue-pulse 2s 2;
+
+}
+
+@keyframes blue-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0,0,0,2)
+    }
+
+    50% {
+        box-shadow: 0 0 0 0 rgba(0,0,0,2)
+    }
+
+    100% {
+        box-shadow: 0 0 0 20px rgba(0,0,0,0)
+    }
+}
+
+
+#stationselect-ch3 {
+    font-size: 0.875rem !important;
+    text-align-last:center;
+    text-align: center;
+}
+
+.blink {
+    animation: blinker 2s linear infinite;
+  }
+  
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }
+
+
+#shazam-row dd {
+    font-size: 0.8rem !important;
+}

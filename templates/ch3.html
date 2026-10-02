@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    {% include "_head.html" %}
+  </head>
+
+<body class="bg-offwhite" data-status-url="{{ status_api_url }}">
+
+  <header class="border-top border-black px-2 py-1 py-sm-3 my-0 mx-0 container-fluid site-header-ch3 bg-white">
+    <div class="row mx-0">
+      <p class="mb-0 mt-1 h2">
+        <span class="float-left">
+          <button type="button" class="btn btn-sm btn-outline-primary ml-2" onclick="addStation()">+</button>
+          <button type="button" class="btn btn-sm btn-outline-primary ml-2 mr-5" onclick="deleteStation()">-</button>
+          <button type="button" class="btn btn-sm btn-outline-primary ml-2" onclick="playAll()">Play</button>
+          <button type="button" class="btn btn-sm btn-outline-primary ml-2" onclick="pauseAll()">Stop</button>
+          <button type="button" class="btn btn-sm btn-outline-primary ml-2" onclick="clearStations()">Clear</button>
+          <button type="button" class="btn btn-sm btn-outline-primary ml-2" onclick="showRandomStations(2)">b2b</button>
+        </span>
+        <span id="btns-right" class="float-end d-block">
+          <input id="input-link" type="text" class="form-inline small d-none" style="height:1.9rem; font-size:0.8rem;" value="">
+          <button id="btn-link" type="button" class="btn btn-sm btn-outline-primary ml-2" onclick="showLink()">Show link</button>
+        </span>
+      </p>
+    </div>
+  </header>
+
+  <div id="page">
+    <div>
+    <section class="page-ch3">
+
+      {# ch3.js shuffles these cards on load, numbers them 1..N and shows the ones named in ?slug=true #}
+      <div id="ch3-row" class="row mx-2 row-cols-xl-5 row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 mb-3">
+        {% for s in stations %}
+        <div class="col themed-grid-col d-none">
+          <div id="{{ s.slug }}" class="station-card rounded-0 card h-100">
+            <ul class="list-group list-group-flush">
+              <button type="button" class="list-group-item btn-remove btn btn-sm btn-outline-primary ml-2 shadow-none">Remove</button>
+              <select class="w-100 form-select list-group-item stationselect-ch3">
+                <optgroup>
+                  <option selected disabled>Select station</option>
+                  {% for o in stations %}
+                  <option value="{{ o.slug }}">{{ o.title }}</option>
+                  {% endfor %}
+                </optgroup>
+              </select>
+            </ul>
+            {% if s.logo %}
+            <img src="{{ root }}assets/images/{{ s.logo }}" class="rounded-0 card-img-top img-fluid d-none d-sm-block" alt="{{ s.title }} logo">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title mb-3">{{ s.title }}</h5>
+              <audio id="audio-{{ s.slug }}" class="audio-ch3" controls="controls">
+                <source id="audio-source-{{ s.slug }}" src="" type="audio/mp3" />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+            <ul class="list-group list-group-flush">
+              {% for st in s.streams %}
+              <button class="list-group-item fw-bold btn-play play-btn" data-title="{{ s.title }}" data-url="{{ st.url }}" data-slug="{{ s.slug }}"><span title="station appears to be {{ st.status }}" class="dot-air {{ st.status }}"></span>Play {{ st.label }}</button>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+    </section>
+    </div>
+  </div>
+
+<footer class="small text-center border-top border-bottom border-black pt-3 pb-3 text-muted bg-white">
+  This is a website under development meant for private use only. Copyrights for the content are held by the respective station owners.<br>
+  All times in local station time. <a class="text-reset fw-bold text-decoration-none" href="{{ home }}">radioactivity.directory</a>.
+</footer>
+
+<script src="{{ root }}assets/js/status.js"></script>
+<script src="{{ root }}assets/js/ch3.js"></script>
+<script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script>
+
+</body>
+</html>

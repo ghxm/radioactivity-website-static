@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    {% include "_head.html" %}
+  </head>
+
+<body class="bg-offwhite" data-song-id-url="{{ song_id_api_url }}" data-status-url="{{ status_api_url }}">
+
+<div>
+  <header class="border-top border-black px-2 py-1 py-sm-3 my-0 mx-0 container-fluid site-header bg-white">
+
+    <div class="row mx-0">
+      <h2 class="text-center text-sm-start mb-0 mt-1">
+        <a href="{{ home }}" class="text-decoration-none text-reset">{{ page_title }}</a> <a title="suggest a station (via e-mail)" href="mailto:{{ contact }}" style="text-decoration: none;">+<sup><span class="fs-6">@</span></sup></a></h2>
+      <p id="tagline" class="d-none d-md-block">shamelessly copied from <a href="https://www.thewire.co.uk/issues/449" class="fw-bold text-decoration-none text-reset" target="_blank">W&thinsp;I&thinsp;R&thinsp;E</a> magazine.</p>
+    </div>
+
+    <div class="row my-0">
+
+      <div id="stream" class="col col-12 col-md-2 ml-2 mt-md-1 px-4 mt-3 mb-3 mb-sm-2">
+        <audio class="w-100 pe-sm-5 mb-1 mb-sm-0" id="audio-player" controls="controls">
+          <source id="audio-source" src="" type="audio/mp3" />
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+
+      <div class="ps-4 pe-1 px-md-5 px-lg-3 ml-0 ml-xs-3 col col-7 col-md-4 align-items-center mt-md-1 px-4 mt-0 mb-2 mb-sm-2">
+        <div id="now-playing" class="btn-group w-100">
+          <select id="stationselect" class="btn btn-outline-primary form-select w-75 text-truncate animate-blue-pulse">
+            <optgroup>
+              <option selected disabled>Jump to</option>
+              {% for s in stations %}
+              <option value="{{ s.slug }}">{{ s.title }}</option>
+              {% endfor %}
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      <div class="col col-5 col-md-6 pe-4 mt-md-1 px-4 mt-0 mb-2 mb-sm-2">
+        <div class="float-end float-md-end d-flex flex-nowrap">
+          <div class="w-auto d-inline-block me-1"></div>
+          <span class="d-block d-inline-block me-1 btn-group">
+            <a id="btn-random" title="Play a random station" class="btn btn-outline-primary text-reset text-decoration-none ps-2 ps-md-3 pe-2 pe-md-3" href="?random=true"><i class="fw-bold bi bi-shuffle"></i></a>
+          </span>
+          <span class="d-block d-inline-block me-md-1">
+            <a id="btn-live" title="Show only stations that are live right now" class="btn btn-outline-primary text-reset text-decoration-none" href="?onair=true"><span class="dot-air online me-0 me-sm-1"></span><span class="d-none d-xl-inline-block">LIVE</span></a>
+          </span>
+          <span class="d-none d-sm-inline-block">
+            <a id="btn-view" title="View as list" class="d-none d-md-inline-block btn btn-outline-primary text-reset text-decoration-none" href="?display=list"><i class="bi bi-card-text"></i></a>
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+  </header>
+
+  <div id="page">
+    <div>
+    <div>
+    <section class="page">
+
+      {% if song_id_api_url %}
+      <div id="shazam-row" class="row mx-2 row-cols-1 mb-3 d-none">
+        <div class="col themed-grid-col">
+          <div class="station-card rounded-0 card p-4">
+            <button class="btn float-left btn-outline-dark mb-4" onclick="closeShazamBox()">Close</button>
+            <div id="shazam-loading" class="h-100 d-none">
+              <p class="text-center fw-bold fst-italic">Detecting Track ID...</p>
+            </div>
+            <div id="shazam-info" class="h-100 d-none">
+              <div class="row">
+                <div class="col-12 col-sm-6">
+                  <h6 class="text-center mb-3">Current</h6>
+                  <dl>
+                    <dt id="shazam-current-id" class="fw-normal"></dt>
+                    <dd id="shazam-current-time" class="fst-italic"></dd>
+                  </dl>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <h6 class="text-center mt-3 mb-3 mt-sm-0">ID history</h6>
+                  <dl id="shazam-previous"></dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {# Both views are rendered; index.js removes the one not selected by ?display. #}
+      <div id="grid-view" class="row mx-2 row-cols-xl-5 row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 mb-3">
+
+        {% for s in stations %}
+        <div class="col themed-grid-col" data-station data-slug="{{ s.slug }}" data-online="{{ 'true' if s.online else 'false' }}">
+          <div id="{{ s.slug }}" class="station-card rounded-0 card h-100">
+            {% if s.logo %}
+            <img src="{{ root }}assets/images/{{ s.logo }}" class="rounded-0 card-img-top img-fluid d-none d-sm-block" alt="{{ s.title }} logo">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ s.title }}
+              {% for rec in s.recommended %}<h6><span class="position-absolute top-0 start-50 translate-middle badge bg-dark">{{ rec }}</span></h6>{% endfor %}</h5>
+              <h6 class="card-subtitle mb-2 text-muted"><span alt="location">{{ s.location }}</span></h6>
+              <h6 class="card-subtitle mb-2 text-muted"><span alt="hours">{{ s.play_time }}</span></h6>
+              <h6 class="card-subtitle mb-2"><span alt="hours"><a class="text-decoration-none" href="{{ s.url }}" target="_blank"><i class="bi bi-globe2"></i></a>
+                {% if s.has_support %}
+                <a href="{{ s.support_href }}" title="Support the station" class="text-decoration-none" target="_blank"><i class="bi bi-life-preserver"></i></a>
+                {% else %}
+                <a href="{{ s.support_href }}" title="Submit a station support link via e-mail" class="text-decoration-none link-danger"><i class="bi bi-life-preserver"></i></a>
+                {% endif %}
+              </span></h6>
+              <div class="d-md-none">
+                <details>
+                  <p class="card-text station-description">{{ s.description }}</p>
+                </details>
+              </div>
+              <div class="d-none d-md-block">
+                <p class="card-text station-description">{{ s.description }}</p>
+              </div>
+            </div>
+            <ul class="list-group list-group-flush">
+              {% for st in s.streams %}
+              <button class="list-group-item fw-bold play-btn" data-title="{{ s.title }}" data-url="{{ st.url }}" data-slug="{{ s.slug }}"><span title="station appears to be {{ st.status }}" class="dot-air {{ st.status }}"></span>Play {{ st.label }}</button>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% endfor %}
+
+        <div class="col d-none d-sm-block themed-grid-col" id="chat-card">
+          <div class="station-card rounded-0 card h-100 p-1">
+            <button id="btn-load-chat" class="btn btn-primary mt-2 mb-2 mx-2" onclick="loadChat()">Load chatroom</button>
+            <button id="btn-open-chat" class="btn btn-primary mx-2" onclick="window.open('https://chuntoo.chatango.com');">Open chatroom in new window</button>
+            <script id="chatangoscript" class="d-none" data-cfasync="false" async src="//st.chatango.com/js/gz/emb.js" style="width: 100%;height: 100%;">{"handle":"chuntoo","arch":"js","styles":{"a":"ffffff","c":"000000","d":"000000","f":0,"i":0,"k":"000000","l":"000000","m":"CC0000","n":"FFFFFF","p":"10.26","q":"000000","usricon":0,"sbc":"000000","fwtickm":0}}</script>
+            <noscript><p>Please enable JavaScript to see the chatroom or enable JavaScript and go to <a href="https://chuntoo.chatango.com">chuntoo.chatango.com</a>.</p></noscript>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="list-view" class="row mx-2 row-cols-xl-5 row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 mb-3 d-none">
+        <table class="station-table table table-hover table-responsive-sm">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Location</th>
+              <th scope="col">Hours</th>
+              <th scope="col">rec'd</th>
+              <th scope="col">Description</th>
+              <th scope="col">Play</th>
+              <th scope="col">Website</th>
+              <th scope="col">Support</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in stations %}
+            <tr class="station-row" id="list-{{ s.slug }}" data-station data-slug="{{ s.slug }}" data-online="{{ 'true' if s.online else 'false' }}">
+              <th scope="row">{{ s.title }}</th>
+              <td>{{ s.location }}</td>
+              <td>{{ s.play_time }}</td>
+              <td>{% for rec in s.recommended %}<span class="align-middle badge bg-dark rec-badge">{{ rec }}</span>{% endfor %}</td>
+              <td>{{ s.description }}</td>
+              <td>{% for st in s.streams %}
+                <button class="btn btn-link py-0 play-btn" type="button" data-title="{{ s.title }}" data-url="{{ st.url }}" data-slug="{{ s.slug }}">
+                  <span title="station appears to be {{ st.status }}" class="dot-air {{ st.status }}"></span><span class="iconify" data-icon="bi:play-fill"></span>
+                </button>
+                {% endfor %}<noscript>enable <code>js</code></noscript></td>
+              <td><a href="{{ s.url }}">{{ s.url_display }}</a></td>
+              <td>
+                {% if s.has_support %}
+                <a class="btn btn-link py-0 fw-900" href="{{ s.support_href }}" title="Support the station" target="_blank"><i class="bi bi-life-preserver"></i></a>
+                {% else %}
+                <a class="btn btn-link py-0 fw-900 link-danger" href="{{ s.support_href }}" title="Submit a station support link via e-mail"><i class="bi bi-life-preserver"></i></a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+    </div>
+    </div>
+  </div>
+</div>
+
+<footer class="small text-center border-top border-bottom border-black pt-3 pb-3 text-muted bg-white">
+  This is a website under development meant for private use only. Copyrights for the content are held by the respective stations.<br>
+  All times in local station time. Contact: {{ contact }}. <a class="text-reset fw-bold text-decoration-none" href="{{ root }}ch3/">Ch3</a>.
+</footer>
+
+<script src="{{ root }}assets/js/status.js"></script>
+<script src="{{ root }}assets/js/index.js"></script>
+<script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script>
+
+</body>
+</html>
